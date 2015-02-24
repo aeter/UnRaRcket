@@ -7,7 +7,7 @@
 (define droppable-canvas%
   (class canvas%
     (define/override (on-drop-file file)
-      (if (find-executable-path "unrar")
+      (if (get-unrar-cmd)
           (run-unrar this (path->string file))
           (send this log-error error-bad-path))
       (super on-drop-file file))
@@ -21,7 +21,6 @@
       (send drawing-context draw-line 155 130 145 160))
     (define/public (log-error error-type)
       (let ([dc (send this get-dc)])
-        (send dc set-font (make-font #:size 9 #:family 'roman))
         (send dc set-text-foreground "red")
         (send dc draw-text error-type 0 0)))    
     (super-new (paint-callback (lambda (canvas dc) 
@@ -31,11 +30,17 @@
   (lambda (canvas file-path)
     (define-values (proc out in err)
       (parameterize ([current-directory (get-dirname file-path)])
-        (subprocess #f #f #f (find-executable-path "unrar") "e" file-path)))
+        (subprocess #f #f #f (get-unrar-cmd) "e" file-path)))
     (subprocess-wait proc)
     (if (not (= 0 (subprocess-status proc)))
         (send canvas log-error error-bad-file)
         #t)))
+
+(define get-unrar-cmd
+  (lambda ()
+    (if (file-exists? "/opt/local/bin/unrar")
+        "/opt/local/bin/unrar"
+        (find-executable-path "unrar"))))
 
 (define get-dirname
   (lambda (file-path)
