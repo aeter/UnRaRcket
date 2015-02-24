@@ -52,7 +52,7 @@
                        (label "UnRaRcket") 
                        (width 300) 
                        (height 300) 
-                       (style '(no-resize-border)))) ; Mac OSX
+                       (style '(no-resize-border)))) ; OSX
     (define canvas (new droppable-canvas% 
                        (parent frame)))
     (send canvas accept-drop-files #t)
