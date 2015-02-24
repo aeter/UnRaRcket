@@ -1,6 +1,6 @@
-; Copyright 2015, Adrian Nackov (BSD, see the LICENCE file.)
-
 #lang racket/gui   
+; Copyright 2015, Adrian Nackov (BSD, see the LICENCE file.)
+; ---
 (define error-bad-file "Error - check if this is a valid .rar file")
 (define error-bad-path "Error - check if the unrar command is runnable")
 
