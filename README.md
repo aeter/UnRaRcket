@@ -1,2 +1,14 @@
 # UnRaRcket
-A simple Racket unrar-ing app
+A simple unrar-ing app with a GUI, in order to replace running "unrar e" with a file drag-drop.
+
+## Prerequisites
+
+On \*buntu, one needs to run
+```sudo apt-get install unrar-nonfree```
+
+On OSX, one needs to run
+```port install unrar```
+
+## License
+
+See the LICENSE file
