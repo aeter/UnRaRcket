@@ -1,5 +1,5 @@
 # UnRaRcket
-A simple unrar-ing app with a GUI, in order to replace running "unrar e" with a file drag-drop.
+A simple unrar-ing app
 
 ## Prerequisites
 
