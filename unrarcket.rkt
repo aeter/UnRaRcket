@@ -28,34 +28,30 @@
     (super-new (paint-callback (lambda (canvas dc) 
                                  (draw canvas dc))))))
 
-(define run-unrar 
-  (lambda (file-path)
-    (define-values (proc out in err)
-      (parameterize ([current-directory (get-dirname file-path)])
-        (subprocess #f #f #f (get-unrar-cmd) "e" file-path)))
-    (subprocess-wait proc)
-    (= 0 (subprocess-status proc))))
+(define (run-unrar file-path) 
+  (define-values (proc out in err)
+    (parameterize ([current-directory (get-dirname file-path)])
+      (subprocess #f #f #f (get-unrar-cmd) "e" file-path)))
+  (subprocess-wait proc)
+  (= 0 (subprocess-status proc)))
 
-(define get-unrar-cmd
-  (lambda ()
-    (if (file-exists? "/opt/local/bin/unrar")
-        "/opt/local/bin/unrar"
-        (find-executable-path "unrar"))))
+(define (get-unrar-cmd)
+  (if (file-exists? "/opt/local/bin/unrar")
+      "/opt/local/bin/unrar"
+      (find-executable-path "unrar")))
 
-(define get-dirname
-  (lambda (file-path)
-    (path->string (path-only file-path))))
+(define (get-dirname file-path)
+  (path->string (path-only file-path)))
 
-(define init-gui 
-  (lambda ()
-    (define frame (new frame% 
-                       (label "UnRaRcket") 
-                       (width 300) 
-                       (height 300) 
-                       (style '(no-resize-border)))) ; OSX
-    (define canvas (new droppable-canvas% 
-                       (parent frame)))
-    (send canvas accept-drop-files #t)
-    (send frame show #t)))
+(define (init-gui) 
+  (define frame (new frame% 
+                     (label "UnRaRcket") 
+                     (width 300) 
+                     (height 300) 
+                     (style '(no-resize-border)))) ; OSX
+  (define canvas (new droppable-canvas% 
+                     (parent frame)))
+  (send canvas accept-drop-files #t)
+  (send frame show #t))
 
 (init-gui)
