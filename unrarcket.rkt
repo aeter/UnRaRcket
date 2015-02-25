@@ -31,7 +31,7 @@
 (define (run-unrar file-path) 
   (define-values (proc out in err)
     (parameterize ([current-directory (get-dirname file-path)])
-      (subprocess #f #f #f (get-unrar-cmd) "e" file-path)))
+      (subprocess #f #f #f (get-unrar-cmd) "e" "-y" file-path)))
   (subprocess-wait proc)
   (= 0 (subprocess-status proc)))
 
