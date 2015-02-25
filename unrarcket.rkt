@@ -7,9 +7,11 @@
 (define droppable-canvas%
   (class canvas%
     (define/override (on-drop-file file)
-      (if (get-unrar-cmd)
-          (run-unrar this (path->string file))
-          (send this log-error error-bad-path))
+      (if (not (get-unrar-cmd))
+          (send this log-error error-bad-path)
+          (if (not (run-unrar file))
+              (send this log-error error-bad-file)
+              #t))
       (super on-drop-file file))
     (define/private (draw self drawing-context)
       (send drawing-context set-pen "Silver" 3 'long-dash)
@@ -27,14 +29,12 @@
                                  (draw canvas dc))))))
 
 (define run-unrar 
-  (lambda (canvas file-path)
+  (lambda (file-path)
     (define-values (proc out in err)
       (parameterize ([current-directory (get-dirname file-path)])
         (subprocess #f #f #f (get-unrar-cmd) "e" file-path)))
     (subprocess-wait proc)
-    (if (not (= 0 (subprocess-status proc)))
-        (send canvas log-error error-bad-file)
-        #t)))
+    (= 0 (subprocess-status proc))))
 
 (define get-unrar-cmd
   (lambda ()
@@ -44,7 +44,7 @@
 
 (define get-dirname
   (lambda (file-path)
-    (path->string (path-only (string->path file-path)))))
+    (path->string (path-only file-path))))
 
 (define init-gui 
   (lambda ()
